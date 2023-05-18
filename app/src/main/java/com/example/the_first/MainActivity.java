@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.core.app.ActivityCompat;
@@ -31,12 +32,19 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CALL = 1;
     private ImageView emailButton, phoneButton;
+    private TextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(this, R.string.app_name, Toast.LENGTH_LONG).show();
 
+        description = findViewById(R.id.description);
         emailButton = findViewById(R.id.emailButton);
         phoneButton = findViewById(R.id.phoneButton);
+
+        description.setText(R.string.app_name);
+
+
+        try {
+            InputStream inputStream = this.getResources().openRawResource(R.raw.description);
+
+            byte[] b = new byte[inputStream.available()];
+            inputStream.read(b);
+            description.setText(new String(b));
+        } catch (Exception e) {
+             e.printStackTrace();
+//            description.setText("Error: can't show help.");
+        }
+
 
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
