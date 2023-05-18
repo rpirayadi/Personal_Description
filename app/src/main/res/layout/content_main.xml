@@ -6,40 +6,29 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <fragment
-        android:id="@+id/nav_host_fragment_content_main"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:navGraph="@navigation/nav_graph" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="121dp"
-        android:layout_height="188dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_content_main"
-        app:layout_constraintStart_toStartOf="@+id/nav_host_fragment_content_main"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="e/avat@tools:samplars" />
-
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:id="@+id/profile"
+        android:layout_width="85dp"
+        android:layout_height="84dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
         android:src="@drawable/ic_launcher_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_content_main"
-        app:layout_constraintStart_toStartOf="@+id/nav_host_fragment_content_main"
-        app:layout_constraintTop_toTopOf="parent"
-        app:civ_border_width="5dp"
-        app:civ_border_color="@color/black"/>
+        app:civ_border_color="@color/black"
+        app:civ_border_width="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/user_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Soltan</string>
+    <string name="user_name">Rouzbeh Pirayadi</string>
     <string name="hello_second_fragment">King Arg: %1$s</string>
 </resources>
