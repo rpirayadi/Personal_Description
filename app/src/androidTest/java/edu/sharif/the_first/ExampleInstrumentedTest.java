@@ -1,4 +1,4 @@
-package com.example.the_first;
+package edu.sharif.the_first;
 
 import android.content.Context;
 

@@ -1,44 +1,30 @@
-package com.example.the_first;
+package edu.sharif.the_first;
 
 import static android.app.PendingIntent.getActivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
+import edu.sharif.the_first.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
+import android.text.Html;
 import android.view.View;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PackageManagerCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,17 +43,15 @@ public class MainActivity extends AppCompatActivity {
         emailButton = findViewById(R.id.emailButton);
         phoneButton = findViewById(R.id.phoneButton);
 
-        description.setText(R.string.app_name);
-
 
         try {
             InputStream inputStream = this.getResources().openRawResource(R.raw.description);
 
             byte[] b = new byte[inputStream.available()];
             inputStream.read(b);
-            description.setText(new String(b));
+            description.setText(Html.fromHtml(new String(b)));
         } catch (Exception e) {
-             e.printStackTrace();
+            e.printStackTrace();
 //            description.setText("Error: can't show help.");
         }
 
