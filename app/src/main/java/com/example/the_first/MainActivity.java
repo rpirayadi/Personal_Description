@@ -67,9 +67,8 @@ public class MainActivity extends AppCompatActivity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
 //        emailIntent.setDataAndType(Uri.parse("mailto:"), "text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, this.getResources().getString(R.string.email_address));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{this.getResources().getString(R.string.email_address)});
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Choose"));
