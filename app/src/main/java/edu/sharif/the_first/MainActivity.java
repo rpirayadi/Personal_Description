@@ -16,11 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView emailButton, phoneButton;
     private TextView description;
 
+    private Switch dayNightSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         emailButton = findViewById(R.id.emailButton);
         phoneButton = findViewById(R.id.phoneButton);
+        dayNightSwitch = findViewById(R.id.day_night_switch);
 
 
         try {
@@ -52,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             description.setText(Html.fromHtml(new String(b)));
         } catch (Exception e) {
             e.printStackTrace();
-//            description.setText("Error: can't show help.");
         }
 
 
@@ -66,36 +71,55 @@ public class MainActivity extends AppCompatActivity {
         phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 makePhoneCall();
             }
         });
+
+        dayNightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (dayNightSwitch.isChecked()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+            }
+        });
+
+        boolean isNightModeOn = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
+        dayNightSwitch.setChecked(isNightModeOn);
     }
 
+    @Override
+    public void recreate() {
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        startActivity(getIntent());
+
+        overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_in);
+    }
+
+
     void sendEmail() {
+        Intent selectorIntent = new Intent(Intent.ACTION_SENDTO);
+        selectorIntent.setData(Uri.parse("mailto:"));
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-
-        emailIntent.setData(Uri.parse("mailto:"));
-//        emailIntent.setDataAndType(Uri.parse("mailto:"), "text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{this.getResources().getString(R.string.email_address)});
+        emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        emailIntent.setSelector(selectorIntent);
+        startActivity(Intent.createChooser(emailIntent, "Sending Email to..."));
 
-        try {
-            startActivity(Intent.createChooser(emailIntent, "Choose"));
-        } catch (Exception e) {
-            Toast.makeText(this, "error", Toast.LENGTH_LONG).show();
-        }
     }
 
 
     void makePhoneCall() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
-        } else {
-            String dialStr = "tel:" + this.getResources().getString(R.string.telephone_num);
-            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dialStr)));
-        }
-
+        String dialStr = "tel:" + this.getResources().getString(R.string.telephone_num);
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        callIntent.setData(Uri.parse(dialStr));
+        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(callIntent);
     }
 
     @Override
