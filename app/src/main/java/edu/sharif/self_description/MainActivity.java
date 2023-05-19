@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         paragraphListHolder = findViewById(R.id.paragraph_list_holder);
 
         String st = readJsonFile();
-        JSONArray paragraphs = parseJsonStringToJavaObject(st);
+        JSONArray paragraphs = parseJsonStringToJSONArray(st);
         addParagraphsToLayout(paragraphListHolder, paragraphs);
 
 
@@ -100,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 for (int i = 0; i < 5; i++) {
-                    Log.d("hi", "run: ");
                     toast.show();
                     try {
                         Thread.sleep(2050);
@@ -115,19 +113,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    void sendEmail() {
+    private void sendEmail() {
         Intent selectorIntent = new Intent(Intent.ACTION_SENDTO);
         selectorIntent.setData(Uri.parse("mailto:"));
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{this.getResources().getString(R.string.email_address)});
         emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         emailIntent.setSelector(selectorIntent);
-        startActivity(Intent.createChooser(emailIntent, "Sending Email to..."));
+        startActivity(Intent.createChooser(emailIntent, "Choose app to send email" ));
 
     }
 
 
-    void makePhoneCall() {
+    private void makePhoneCall() {
         String dialStr = "tel:" + this.getResources().getString(R.string.telephone_num);
         Intent callIntent = new Intent(Intent.ACTION_DIAL);
         callIntent.setData(Uri.parse(dialStr));
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(callIntent);
     }
 
-    String readJsonFile() {
+    private String readJsonFile() {
         InputStream inputStream = getResources().openRawResource(R.raw.json_description);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -155,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    JSONArray parseJsonStringToJavaObject(String jsonString) {
+    private JSONArray parseJsonStringToJSONArray(String jsonString) {
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(jsonString);
@@ -165,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
         return jsonArray;
     }
 
-    void addParagraphsToLayout(LinearLayout paragraphListHolder, JSONArray paragraphs) {
+    private void addParagraphsToLayout(LinearLayout paragraphListHolder, JSONArray paragraphs) {
         for (int i = 0; i < paragraphs.length(); i++) {
-            JSONObject paragraph = null;
+            JSONObject paragraph;
             try {
                 paragraph = paragraphs.getJSONObject(i);
                 paragraphListHolder.addView(createParagraphView(paragraph));
