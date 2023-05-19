@@ -1,22 +1,13 @@
 package edu.sharif.self_description;
 
-import static android.app.PendingIntent.getActivity;
-
-import static androidx.fragment.app.FragmentManager.TAG;
-import static java.lang.Thread.sleep;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
-import edu.sharif.self_description.R;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 
@@ -25,10 +16,17 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 class FirstCreation {
@@ -36,10 +34,10 @@ class FirstCreation {
 }
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int REQUEST_CALL = 1;
     private ImageView emailButton, phoneButton;
-    private TextView description;
+
+
+    private LinearLayout paragraphListHolder;
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch dayNightSwitch;
@@ -52,29 +50,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (FirstCreation.firstCreation) {
-            Log.d("lanat", "onCreate: ");
-        }
-        if (FirstCreation.firstCreation) {
             Toast toast = Toast.makeText(this, R.string.welcome, Toast.LENGTH_SHORT);
             showToastManyTimes(toast);
             FirstCreation.firstCreation = false;
         }
 
-        description = findViewById(R.id.description);
         emailButton = findViewById(R.id.emailButton);
         phoneButton = findViewById(R.id.phoneButton);
         dayNightSwitch = findViewById(R.id.day_night_switch);
+        paragraphListHolder = findViewById(R.id.paragraph_list_holder);
 
-
-        try {
-            InputStream inputStream = this.getResources().openRawResource(R.raw.description);
-
-            byte[] b = new byte[inputStream.available()];
-            inputStream.read(b);
-            description.setText(Html.fromHtml(new String(b)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String st = readJsonFile();
+        JSONArray paragraphs = parseJsonStringToJavaObject(st);
+        addParagraphsToLayout(paragraphListHolder, paragraphs);
 
 
         emailButton.setOnClickListener(view -> sendEmail());
@@ -147,5 +135,59 @@ public class MainActivity extends AppCompatActivity {
         startActivity(callIntent);
     }
 
+    String readJsonFile() {
+        InputStream inputStream = getResources().openRawResource(R.raw.json_description);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        byte buf[] = new byte[1024];
+        int len;
+        try {
+            while ((len = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputStream.toString();
+    }
+
+
+    JSONArray parseJsonStringToJavaObject(String jsonString) {
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    void addParagraphsToLayout(LinearLayout paragraphListHolder, JSONArray paragraphs) {
+        for (int i = 0; i < paragraphs.length(); i++) {
+            JSONObject paragraph = null;
+            try {
+                paragraph = paragraphs.getJSONObject(i);
+                paragraphListHolder.addView(createParagraphView(paragraph));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private View createParagraphView(JSONObject paragraph) {
+        View paragraphView = getLayoutInflater().inflate(R.layout.paragraph_holder, null, false);
+        TextView titleTextView = (TextView) paragraphView.findViewById(R.id.paragraph_title);
+        TextView textTextView = (TextView) paragraphView.findViewById(R.id.paragraph_content);
+        try {
+            titleTextView.setText(paragraph.getString("title"));
+            textTextView.setText(paragraph.getString("content"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return paragraphView;
+    }
 
 }
