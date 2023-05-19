@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'edu.sharif.the_first'
+    namespace 'edu.sharif.self_description'
     compileSdk 33
 
     defaultConfig {
-        applicationId "edu.sharif.the_first"
+        applicationId "edu.sharif.self_description"
         minSdk 24
         targetSdk 33
         versionCode 1

@@ -1,4 +1,4 @@
-package edu.sharif.the_first;
+package edu.sharif.self_description;
 
 import org.junit.Test;
 

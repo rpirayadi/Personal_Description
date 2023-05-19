@@ -9,13 +9,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.The_First"
+        android:theme="@style/Theme.self_description"
         tools:targetApi="31">
         <activity
-            android:name="edu.sharif.the_first.MainActivity"
+            android:name="edu.sharif.self_description.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.The_First.NoActionBar">
+            android:theme="@style/Theme.self_description.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

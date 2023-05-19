@@ -1,14 +1,15 @@
-package edu.sharif.the_first;
+package edu.sharif.self_description;
 
 import static android.app.PendingIntent.getActivity;
 
-import android.Manifest;
+import static java.lang.Thread.sleep;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
-import edu.sharif.the_first.R;
+import edu.sharif.self_description.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +18,6 @@ import android.text.Html;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 
 import android.widget.CompoundButton;
@@ -37,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Switch dayNightSwitch;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Toast.makeText(this, R.string.app_name, Toast.LENGTH_LONG).show();
 
@@ -99,6 +100,25 @@ public class MainActivity extends AppCompatActivity {
         startActivity(getIntent());
 
         overridePendingTransition(android.R.anim.fade_out, android.R.anim.fade_in);
+    }
+
+    private void showToastManyTimes(Toast toast) {
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 3; i++) {
+                    toast.show();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    toast.cancel();
+                }
+            }
+        };
+        t.start();
     }
 
 
