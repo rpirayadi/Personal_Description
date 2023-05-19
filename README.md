@@ -42,3 +42,11 @@ In the end dark mode is added to the application using a switch. Note that secon
 
 ![alt text](https://github.com/rpirayadi/Personal_Description/blob/master/readme%20images/day_night.PNG)
 
+## Appearance
+
+The UI design is depicted in the below figures.
+
+![alt text](https://github.com/rpirayadi/Personal_Description/blob/master/readme%20images/appearance.PNG)
+
+![alt text](https://github.com/rpirayadi/Personal_Description/blob/master/readme%20images/appearance2.PNG)
+
