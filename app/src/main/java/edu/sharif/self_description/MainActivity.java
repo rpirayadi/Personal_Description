@@ -2,8 +2,10 @@ package edu.sharif.self_description;
 
 import static android.app.PendingIntent.getActivity;
 
+import static androidx.fragment.app.FragmentManager.TAG;
 import static java.lang.Thread.sleep;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -28,12 +31,17 @@ import android.widget.Toast;
 
 import java.io.InputStream;
 
+class FirstCreation {
+    public static boolean firstCreation = true;
+}
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CALL = 1;
     private ImageView emailButton, phoneButton;
     private TextView description;
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch dayNightSwitch;
 
 
@@ -43,7 +51,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Toast.makeText(this, R.string.app_name, Toast.LENGTH_LONG).show();
+        if (FirstCreation.firstCreation) {
+            Log.d("lanat", "onCreate: ");
+        }
+        if (FirstCreation.firstCreation) {
+            Toast toast = Toast.makeText(this, R.string.welcome, Toast.LENGTH_SHORT);
+            showToastManyTimes(toast);
+            FirstCreation.firstCreation = false;
+        }
 
         description = findViewById(R.id.description);
         emailButton = findViewById(R.id.emailButton);
@@ -62,20 +77,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        emailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendEmail();
-            }
-        });
+        emailButton.setOnClickListener(view -> sendEmail());
 
-        phoneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                makePhoneCall();
-            }
-        });
+        phoneButton.setOnClickListener(view -> makePhoneCall());
 
         dayNightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -107,10 +111,11 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread() {
             @Override
             public void run() {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 5; i++) {
+                    Log.d("hi", "run: ");
                     toast.show();
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(2050);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -140,18 +145,6 @@ public class MainActivity extends AppCompatActivity {
         callIntent.setData(Uri.parse(dialStr));
         callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(callIntent);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CALL) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                makePhoneCall();
-            } else {
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
 
